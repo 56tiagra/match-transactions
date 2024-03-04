@@ -9,22 +9,19 @@ import BaseInput from '@/components/BaseInput';
 const Home: React.FC = () => {
   const [ordersInput, setOrdersInput] = useState('');
   const [transactionsInput, setTransactionsInput] = useState('');
-  const [exactMatch, setExactMatch] = useState(false);
+  const [fuzzyMatch, setfuzzyMatch] = useState(false);
   const [matchedTransactions, setMatchedTransactions] = useState<MatchedTransaction[]>([]);
 
-  const handleExactMatchToggle = () => {
-    setExactMatch((prevExactMatch) => !prevExactMatch);
+  const handlefuzzyMatchToggle = () => {
+    setfuzzyMatch((prevfuzzyMatch) => !prevfuzzyMatch);
   };
 
   const handleProcessMatch = () => {
-    // Parse ordersInput and transactionsInput into arrays of orders and transactions
     const orders: Order[] = JSON.parse(ordersInput);
     const transactions: Transaction[] = JSON.parse(transactionsInput);
 
-    // Call the matching function based on exactMatch flag
-    const matches = matchTransactionsToOrders(transactions, orders, exactMatch);
-
-    // Update state with matched transactions
+    // Call the matching function based on fuzzyMatch flag
+    const matches = matchTransactionsToOrders(transactions, orders, fuzzyMatch);
     setMatchedTransactions(matches);
   };
 
@@ -42,7 +39,7 @@ const Home: React.FC = () => {
         </div>
       </div>
       <div className="flex items-center mt-4">
-        <ToggleSwitch checked={exactMatch} onChange={handleExactMatchToggle} />
+        <ToggleSwitch checked={fuzzyMatch} onChange={handlefuzzyMatchToggle} />
         <label className="ml-2">Exact Match</label>
       </div>
       <div className="mt-4">

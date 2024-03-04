@@ -14,7 +14,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = ({ transaction }) 
 
   return (
     <div className="border rounded-lg p-4 mb-4">
-      <div className="flex justify-between items-center cursor-pointer" onClick={toggleDetails}>
+      <div className="flex justify-between items-center cursor-pointer" role="collaps-header" onClick={toggleDetails}>
         <h4 className="text-md font-semibold">Customer: {transaction.customerName} Transaction Date: {transaction.date} Amount: {transaction.transactionAmount}</h4>
         <span>{isOpen ? '-' : '+'}</span>
       </div>
