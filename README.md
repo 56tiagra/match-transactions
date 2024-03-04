@@ -36,33 +36,36 @@ bun test
 
 ## Approach of the solution:
 
-User Types and Admin Users can share a Components: Header
-Can separate the UI into two pieces: UserType and UserContent, then combine them together UserPage
-I used color-picker found few colors might be reusable
-radio-box activated background color: #e8f2fb (also used in the avatar background)
-There are 3 dividers color: #f3f5f9
-font is special, I might need to import a font. (I found a free font called Kalypsa, but unfortunately, only medium size is free. I will put it in the public/font)
-currently working on the UI, I will use styled-components to build the UI. Due to project is TS based, types/SC need to be installed on dev-dependency too.
+For the frontend side, I have build the application with Nextjs to interact with the matching utils to do the exact matching and fuzzy match.
 
-Divider will be my first component, it shows up at the first row.
-Header will be the next one, that's the first component I would like to use inside UserType.
-Radio will be the third one, it should live inside UserType folder.
-Top part is done. Now working on the data fetching part. I will use AWS amplify to connect to aws and fetch through graphql.
+The input components for orders and transactions should allow users to input data easily, with options for formatting and validation.
+Include placeholders or labels to indicate the purpose of each input field.
+Implement features such as JSON formatting and validation to assist users in entering data accurately.
 
-First of all, I'll use dotenv to save aws configs.
-graphql schema is in the src/graphql folder.
-I think the best practise of configuring aws amplify with configs is inside index.ts.
-Starting with data fetching. I always prefer to build a custom hook to deal with data fetching. The hook will extract from UI component, it will improve readability and reduce maintain cost.
+Regarding the matching algorithm, I have put the following consideration.
+Design an efficient and accurate matching algorithm to match transactions to orders based on specified criteria.
+Consider factors such as customer name, order ID, date, product, and transaction amount for matching.
+Implement both exact matching and fuzzy matching options, allowing users to choose the appropriate matching strategy.
+For the fuzzy match, use a libary called `string-similarity` to do the fuzzy match and with a score to indicate the correctness. 
+Include reconciliation logic to verify that the total transaction amount for each order matches the order price.
+Flag any discrepancies or mismatches between transaction amounts and order prices for further investigation.
 
-It fetches data with graphql
-It cleans up the data, filter data with userType and return the data to UserContent.
-I need some mock data for testing, in this case I will use real data from aws.
-fetch should wrapped inside a useCallback, it only depends on query. At this point, query is static, so fetch should always be the same function.
-Users filter should be wrapped inside a useMemo with dependency users and userType. If these two dependencies don't change, filtered users should always reman the same.
-renderHook from '@testing-library/react-hooks' is not supported in React18. I will use renderHook from '@testing-library/react@alpha(13)'. It should be fine.
-Data fetching finished. Back to UI UserContent
+## Out of scope but things can be improved:
 
-Header should be dynamic depends on userType state (Admin users or Manager users).
-Inside UserContent, I will use UserCard to render each user.
-Inside UserContent, I will use useFilteredUsers to fetch and get users.
-A util function convertToSentenceCase will be used to convert userType to sentence case.
+- Currently the application is frontend only, the utils can be implemented as a backend service.
+- Add file upload support for the input file and download the output.
+- The fuzzy matching algorithm can be improved with a customized dictionary or trained model.
+
+## Design the workflow for manual review the result:
+- Currently the output for fuzzy match include the score, we can add a new property to the `MatchedTransaction` with emnum to indicate the status for the result as `Pending Review`, `Approved` or `Reject`
+- In the fronend, the user can interact with the result can click the button to action, then post the result back to the backend for feedback loop.
+The overall process can be as below:
+```
+[Initial Matching Process] --> [User Verification Interface]
+[User Verification Interface] --> |Confirmed Matches| [Confirmation Process]
+[User Verification Interface] --> |Rejected Matches| [Rejection Process]
+[Rejection Process] --> [Feedback Mechanism]
+[Confirmation Process] --> [Feedback Mechanism]
+[Feedback Mechanism] --> [Learning and Adaptation]
+[Learning and Adaptation] --> [Initial Matching Process]
+```
