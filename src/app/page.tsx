@@ -40,7 +40,7 @@ const Home: React.FC = () => {
       </div>
       <div className="flex items-center mt-4">
         <ToggleSwitch checked={fuzzyMatch} onChange={handlefuzzyMatchToggle} />
-        <label className="ml-2">Exact Match</label>
+        <label className="ml-2">Fuzzy Match</label>
       </div>
       <div className="mt-4">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleProcessMatch}>Process Match</button>
